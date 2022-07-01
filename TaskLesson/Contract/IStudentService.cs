@@ -3,6 +3,7 @@ using TaskLesson.Template;
 using TaskLesson.Dtos;
 using System;
 using System.Collections.Generic;
+using TaskLesson.Models;
 
 namespace TaskLesson.Contract
 {
@@ -10,8 +11,8 @@ namespace TaskLesson.Contract
     {
         Task<ResultModel<StudentDTO>> CreateStudentAsync(StudentDTO student);
         Task<ResultModel<StudentDTO>> DeleteStudentAsync(Guid Id);
-        Task<ResultModel<List<StudentDTO>>> GetStudentsAsync();
-        Task<ResultModel<List<StudentDTO>>> GetStudentsByIdAsync();
-        Task<ResultModel<StudentDTO>> UpdateStudentAsync(StudentDTO student);
+        Task<ResultModel<List<Student>>> GetStudentsAsync();
+        Task<ResultModel<StudentDTO>> GetStudentsByIdAsync(Guid Id);
+        Task<ResultModel<StudentDTO>> UpdateStudentAsync(Guid Id, StudentDTO student);
     }
 }

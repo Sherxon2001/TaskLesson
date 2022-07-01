@@ -25,5 +25,37 @@ namespace TaskLesson.Controllers
 
             return Ok(result.Data);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudentsAsync()
+        {
+            var result = await _service.GetStudentsAsync();
+
+            return Ok(result.Data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudentsByIdAsync(Guid Id)
+        {
+            var result = await _service.GetStudentsByIdAsync(Id);
+
+            return Ok(result.Data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateStudentAsync(Guid Id, StudentDTO student)
+        {
+            var result = await _service.UpdateStudentAsync(Id, student);
+
+            return Ok(result.Data);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteStudentAsync(Guid Id)
+        {
+            var result = await _service.DeleteStudentAsync(Id);
+
+            return Ok(result.Data);
+        }
     }
 }

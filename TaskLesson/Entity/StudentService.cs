@@ -20,7 +20,6 @@ namespace TaskLesson.Entity
             this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-
         public async Task<ResultModel<StudentDTO>> CreateStudentAsync(StudentDTO studentDTO)
         {
             ResultModel<StudentDTO> _state = new ResultModel<StudentDTO>();
@@ -54,24 +53,151 @@ namespace TaskLesson.Entity
             return _state;
         }
 
-        public Task<ResultModel<StudentDTO>> DeleteStudentAsync(Guid Id)
+        public async Task<ResultModel<StudentDTO>> DeleteStudentAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            ResultModel<StudentDTO> _state = new ResultModel<StudentDTO>();
+
+            try
+            {
+                StudentDTO studentDTO = new StudentDTO();
+                var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.Id == Id);
+
+                if(student is not null)
+                {
+                    studentDTO.Fullname = student.Fullname;
+                    studentDTO.DatOfBirth = student.DatOfBirth;
+                    studentDTO.Email = student.Email;
+                    studentDTO.PhoneNumber = student.PhoneNumber;
+
+                    _state.Code = 200;
+                    _state.Message = nameof(TemplateEnum.success);
+                    _state.Data = studentDTO;
+
+                    _dbContext.Students.Remove(student);
+                    await _dbContext.SaveChangesAsync();
+                }
+                else if(student is null)
+                {
+                    _state.Code = 404;
+                    _state.Message = nameof(TemplateEnum.notFound);
+                    _state.Data = null;
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                _state.Code = 500;
+                _state.Message = ex.Message;
+                _state.Data = null;
+            }
+
+            return _state;
         }
 
-        public Task<ResultModel<List<StudentDTO>>> GetStudentsAsync()
+        public async Task<ResultModel<List<Student>>> GetStudentsAsync()
         {
-            throw new NotImplementedException();
+            ResultModel<List<Student>> _state = new ResultModel<List<Student>>();
+
+            try
+            {
+                var result = await _dbContext.Students.ToListAsync();
+
+                _state.Code = 200;
+                _state.Message = "success";
+                _state.Data = result;
+            }
+            catch (Exception ex)
+            {
+                _state.Code = 500;
+                _state.Message = ex.Message;
+                _state.Data = null;
+            }
+
+            return _state;
         }
 
-        public Task<ResultModel<List<StudentDTO>>> GetStudentsByIdAsync()
+        public async Task<ResultModel<StudentDTO>> GetStudentsByIdAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            ResultModel<StudentDTO> _state = new ResultModel<StudentDTO>();
+
+            try
+            {
+                StudentDTO studentDTO = new StudentDTO();
+                var student = await _dbContext.Students.FirstOrDefaultAsync(s => s.Id == Id);
+
+                if (student is not null)
+                {
+                    studentDTO.Fullname = student.Fullname;
+                    studentDTO.DatOfBirth = student.DatOfBirth;
+                    studentDTO.Email = student.Email;
+                    studentDTO.PhoneNumber = student.PhoneNumber;
+
+
+                    _state.Code = 200;
+                    _state.Message = "success";
+                    _state.Data = studentDTO;
+                }
+                else if (student is null)
+                {
+                    _state.Code = 404;
+                    _state.Message = "success";
+                    _state.Data = null;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _state.Code = 500;
+                _state.Message = ex.Message;
+                _state.Data = null;
+            }
+
+            return _state;
         }
 
-        public Task<ResultModel<StudentDTO>> UpdateStudentAsync(StudentDTO student)
+        public async Task<ResultModel<StudentDTO>> UpdateStudentAsync(Guid Id, StudentDTO student)
         {
-            throw new NotImplementedException();
+            ResultModel<StudentDTO> _state = new ResultModel<StudentDTO>();
+
+            try
+            {
+                StudentDTO studentDTO = new StudentDTO();
+                var result = await _dbContext.Students.FirstOrDefaultAsync(s => s.Id == Id);
+
+                if (student is not null)
+                {
+                    result.Fullname = student.Fullname;
+                    result.DatOfBirth = student.DatOfBirth;
+                    result.Email = student.Email;
+                    result.PhoneNumber = student.PhoneNumber;
+
+                    studentDTO.Fullname = student.Fullname;
+                    studentDTO.DatOfBirth = student.DatOfBirth;
+                    studentDTO.Email = student.Email;
+                    studentDTO.PhoneNumber = student.PhoneNumber;
+
+                    _state.Code = 200;
+                    _state.Message = "success";
+                    _state.Data = studentDTO;
+
+                    await _dbContext.SaveChangesAsync();
+                }
+                else if (student is null)
+                {
+                    _state.Code = 404;
+                    _state.Message = "success";
+                    _state.Data = null;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _state.Code = 500;
+                _state.Message = ex.Message;
+                _state.Data = null;
+            }
+
+            return _state;
         }
     }
 }
